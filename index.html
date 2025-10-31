@@ -78,6 +78,16 @@
   </style>
 </head>
 <body>
+  <script>
+    (function () {
+      const verified = localStorage.getItem("access_verified");
+      if (verified !== "true") {
+        localStorage.setItem("origin_page", window.location.href);
+        window.location.href = "https://alestore-official.github.io/AleCAPTCHA";
+      }
+    })();
+  </script>
+
   <div class="box">
     <h2>Create Your AleStore Account</h2>
     <form id="form">
