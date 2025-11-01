@@ -4,18 +4,9 @@
   <meta charset="UTF-8" />
   <title>Register to AleStore</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://alestore-official.github.io/control.js"></script>
 </head>
 <body>
-  <script>
-    (function () {
-      const verified = localStorage.getItem("access_verified");
-      if (verified !== "true") {
-        localStorage.setItem("origin_page", window.location.href);
-        window.location.href = "https://alestore-official.github.io/AleCAPTCHA";
-      }
-    })();
-  </script>
-
   <form id="form">
     <input type="text" name="nome" placeholder="First Name" required />
     <input type="text" name="cognome" placeholder="Last Name" required />
