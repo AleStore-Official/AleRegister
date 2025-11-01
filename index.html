@@ -7,104 +7,88 @@
   <script src="https://alestore-official.github.io/control.js"></script>
   <style>
     body {
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
+      background: #f4f4f4;
       font-family: 'Segoe UI', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
     .box {
-      background-color: #fff;
+      background: #fff;
       padding: 40px;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       text-align: center;
-      width: 100%;
       max-width: 400px;
+      width: 100%;
     }
-    input {
+    input, button {
       width: 100%;
       padding: 12px;
       margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
       font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
     button {
-      width: 100%;
-      padding: 12px;
-      background-color: #007bff;
+      background: #007bff;
       color: #fff;
       border: none;
-      border-radius: 6px;
-      font-size: 16px;
       cursor: pointer;
-      margin-top: 10px;
     }
     button:hover {
-      background-color: #0056b3;
+      background: #0056b3;
     }
     .link {
-      margin-top: 20px;
       display: block;
-      font-size: 14px;
+      margin-top: 20px;
       color: #007bff;
       text-decoration: none;
-    }
-    .link:hover {
-      text-decoration: underline;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
   <div class="box">
-    <h2>Register to AleStore</h2>
+    <h2>Create your account</h2>
     <form id="form">
-      <input type="text" name="nome" placeholder="First Name" required />
-      <input type="text" name="cognome" placeholder="Last Name" required />
+      <input type="text" name="firstName" placeholder="First Name" required />
+      <input type="text" name="lastName" placeholder="Last Name" required />
       <input type="email" name="email" placeholder="Email" required />
       <input type="password" name="password" placeholder="Password" required />
-      <button type="submit">Register</button>
+      <button type="submit">Send verification code</button>
     </form>
-    <a class="link" href="https://alestore-official.github.io/AleLogin">Hai già un account?</a>
+    <a class="link" href="https://alestore-official.github.io/AleLogin">Already have an account?</a>
   </div>
 
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js';
-
     const supabase = createClient(
       'https://hsyyrcbibohwvbuwxwok.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzeXlyY2JpYm9od3ZidXd4d29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE0MDcsImV4cCI6MjA3NjYzNzQwN30.2KsFsGYjwf_cA7Z9oglVthiaE1_jWYuQ6HMMm5UXsyo'
     );
 
     const form = document.getElementById("form");
-
-    form.addEventListener("submit", async function (e) {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      const firstName = form.firstName.value.trim();
+      const lastName = form.lastName.value.trim();
+      const email = form.email.value.trim().toLowerCase();
+      const password = form.password.value;
 
-      const nome = this.nome.value.trim();
-      const cognome = this.cognome.value.trim();
-      const email = this.email.value.trim().toLowerCase();
-      const password = this.password.value;
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      localStorage.setItem("pending_user", JSON.stringify({ firstName, lastName, email, password }));
 
-      localStorage.setItem("pending_user", JSON.stringify({ nome, cognome, email }));
-
-      const { error } = await supabase.auth.signUp({
+      await supabase.from("verification_codes").insert({
         email,
-        password,
-        options: {
-          emailRedirectTo: "https://alestore-official.github.io/AleConfirm"
-        }
+        code,
+        expires_at: new Date(Date.now() + 10 * 60000).toISOString()
       });
 
-      if (error) {
-        alert("Errore: " + error.message);
-      } else {
-        alert("📧 Registrazione inviata! Controlla la tua email.");
-      }
+      alert("📧 Verification code sent. Please check your email.");
+      window.location.href = "https://alestore-official.github.io/AleConfirm";
     });
   </script>
 </body>
