@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Register to AleStore</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://alestore-official.github.io/control.js"></script>
+  <script src="https://alestore-official.github.io/AleCAPTCHA/control.js"></script>
   <style>
     body { background: #f4f4f4; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
     .box { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 100%; }
@@ -31,7 +31,7 @@
     import { createClient } from 'https://esm.sh/@supabase/supabase-js';
     const supabase = createClient(
       'https://hsyyrcbibohwvbuwxwok.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzeXlyY2JpYm9od3ZidXd4d29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE0MDcsImV4cCI6MjA3NjYzNzQwN30.2KsFsGYjwf_cA7Z9oglVthiaE1_jWYuQ6HMMm5UXsyo'
+      'YOUR_SUPABASE_ANON_KEY'
     );
 
     const form = document.getElementById("form");
