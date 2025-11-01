@@ -42,7 +42,7 @@
       const email = form.email.value.trim().toLowerCase();
       const password = form.password.value;
 
-      localStorage.setItem("pending_user", JSON.stringify({ firstName, lastName, email }));
+      localStorage.setItem("pending_user", JSON.stringify({ firstName, lastName, email, password }));
 
       const { error } = await supabase.auth.signUp({
         email,
@@ -53,10 +53,9 @@
       });
 
       if (error) {
-        alert("Error: " + error.message);
+        alert("❌ " + error.message);
       } else {
         alert("📧 Confirmation email sent. Please check your inbox.");
-        window.location.href = "https://alestore-official.github.io/AleConfirm";
       }
     });
   </script>
