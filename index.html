@@ -120,6 +120,19 @@
 
       localStorage.setItem("pending_user", JSON.stringify({ firstName, lastName, email, password }));
 
+      // ✅ Check if email is already registered
+      const { data: existingUser, error: lookupError } = await supabase
+        .from("utenti")
+        .select("email")
+        .eq("email", email)
+        .single();
+
+      if (existingUser) {
+        alert("⚠️ This email is already registered. Please log in instead.");
+        window.location.href = "https://alestore-official.github.io/AleLogin";
+        return;
+      }
+
       const { error } = await supabase.auth.signUp({
         email,
         password,
