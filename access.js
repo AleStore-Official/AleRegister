@@ -6,31 +6,30 @@ const supabase = createClient(
 );
 
 export async function blockIfUnauthorized() {
-  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  const email = localStorage.getItem("user_email");
+  const password = localStorage.getItem("user_password");
 
-  if (sessionError || !sessionData?.session?.user) {
-    console.warn("User not authenticated.");
-    redirectToRegister();
+  if (!email || !password) {
+    window.location.href = "https://alestore-official.github.io/AleRegister";
     return;
   }
 
-  const { id, email } = sessionData.session.user;
+  // Verifica se le credenziali sono valide
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-  const { data: userRecord, error: queryError } = await supabase
-    .from('utenti')
-    .select('id')
-    .eq('id', id)
+  if (error || !data?.user?.email_confirmed_at) {
+    window.location.href = "https://alestore-official.github.io/AleRegister";
+    return;
+  }
+
+  // (Opzionale) Verifica se l'email esiste nella tabella "utenti"
+  const { data: profile, error: profileError } = await supabase
+    .from("utenti")
+    .select("*")
+    .eq("email", email)
     .single();
 
-  if (queryError || !userRecord) {
-    console.warn("User not found in 'utenti' table.");
-    redirectToRegister();
-    return;
+  if (profileError || !profile) {
+    window.location.href = "https://alestore-official.github.io/AleRegister";
   }
-
-  console.log("Access granted for:", email);
-}
-
-function redirectToRegister() {
-  window.location.href = "https://alestore-official.github.io/AleRegister/";
 }
