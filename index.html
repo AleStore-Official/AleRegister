@@ -132,20 +132,23 @@
         return;
       }
 
-      // Check if email is already registered
-      const { data: existingUser, error: lookupError } = await supabase.auth.signInWithPassword({
-        email,
-        password: "invalid" // dummy password to trigger error
-      });
+      // ✅ Check if email already exists in "utenti"
+      const { data: existing, error: lookupError } = await supabase
+        .from("utenti")
+        .select("email")
+        .eq("email", email)
+        .single();
 
-      if (!lookupError && existingUser?.user) {
+      if (existing) {
         alert("⚠️ This email is already registered. Please log in instead.");
         window.location.href = "https://alestore-official.github.io/AleLogin";
         return;
       }
 
+      // ✅ Save user data temporarily
       localStorage.setItem("pending_user", JSON.stringify({ firstName, lastName, email, password }));
 
+      // ✅ Register with Supabase Auth
       const { error } = await supabase.auth.signUp({
         email,
         password,
