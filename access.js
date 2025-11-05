@@ -14,7 +14,7 @@ export async function blockIfUnauthorized() {
     return;
   }
 
-  // Verifica se le credenziali sono valide
+  // Verifica credenziali
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error || !data?.user?.email_confirmed_at) {
@@ -22,14 +22,14 @@ export async function blockIfUnauthorized() {
     return;
   }
 
-  // (Opzionale) Verifica se l'email esiste nella tabella "utenti"
+  // Verifica se l'account esiste e non è bloccato
   const { data: profile, error: profileError } = await supabase
     .from("utenti")
-    .select("*")
+    .select("email, bloccato")
     .eq("email", email)
     .single();
 
-  if (profileError || !profile) {
+  if (profileError || !profile || profile.bloccato === true) {
     window.location.href = "https://alestore-official.github.io/AleRegister";
   }
 }
