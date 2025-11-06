@@ -14,7 +14,6 @@ export async function blockIfUnauthorized() {
     return;
   }
 
-  // Verifica credenziali
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error || !data?.user?.email_confirmed_at) {
@@ -22,7 +21,6 @@ export async function blockIfUnauthorized() {
     return;
   }
 
-  // Verifica se l'utente esiste nella tabella "utenti"
   const { data: profile, error: profileError } = await supabase
     .from("utenti")
     .select("email")
