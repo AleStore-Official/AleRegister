@@ -22,14 +22,15 @@ export async function blockIfUnauthorized() {
     return;
   }
 
-  // Verifica se l'account esiste e non è bloccato
+  // Verifica se l'account è bloccato
   const { data: profile, error: profileError } = await supabase
     .from("utenti")
-    .select("email, bloccato")
+    .select("bloccato")
     .eq("email", email)
     .single();
 
-  if (profileError || !profile || profile.bloccato === true) {
-    window.location.href = "https://alestore-official.github.io/AleRegister";
+  if (profile?.bloccato === true) {
+    window.location.href = "https://alestore-official.github.io/AleBlocked";
+    return;
   }
 }
