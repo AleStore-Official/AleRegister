@@ -21,11 +21,9 @@
       border: 1px solid rgba(255, 255, 255, 0.25);
       border-radius: 20px;
       padding: 40px;
-      box-shadow:
-        0 4px 30px rgba(0, 0, 0, 0.1),
-        inset 0 0 0.5px rgba(255, 255, 255, 0.4);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1),
+                  inset 0 0 0.5px rgba(255, 255, 255, 0.4);
       backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       max-width: 400px;
       width: 90%;
       text-align: center;
@@ -132,7 +130,6 @@
         return;
       }
 
-      // ✅ Check if email already exists in "utenti"
       const { data: existing, error: lookupError } = await supabase
         .from("utenti")
         .select("email")
@@ -145,10 +142,8 @@
         return;
       }
 
-      // ✅ Save user data temporarily
       localStorage.setItem("pending_user", JSON.stringify({ firstName, lastName, email, password }));
 
-      // ✅ Register with Supabase Auth
       const { error } = await supabase.auth.signUp({
         email,
         password,
