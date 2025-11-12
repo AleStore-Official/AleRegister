@@ -8,40 +8,26 @@
     body {
       background: linear-gradient(135deg, #d0f0ff, #fbeaff);
       font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      overflow: hidden;
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh; margin: 0; overflow: hidden;
     }
     .glass-box {
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      border-radius: 20px;
-      padding: 40px;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1),
-                  inset 0 0 0.5px rgba(255, 255, 255, 0.4);
-      backdrop-filter: blur(16px);
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-      animation: fadeInUp 0.8s ease-out;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 20px; padding: 40px; box-shadow: 0 4px 30px rgba(0,0,0,0.1),
+      inset 0 0 0.5px rgba(255,255,255,0.4); backdrop-filter: blur(16px);
+      max-width: 400px; width: 90%; text-align: center;
     }
     h2 { margin-bottom: 20px; color: #222; font-weight: 600; }
     input, button {
-      width: 100%; padding: 12px; margin: 10px 0;
-      font-size: 16px; border-radius: 10px; border: none;
-      outline: none; background: rgba(255, 255, 255, 0.25);
-      color: #333; box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
-      backdrop-filter: blur(6px);
+      width: 100%; padding: 12px; margin: 10px 0; font-size: 16px;
+      border-radius: 10px; border: none; outline: none;
+      background: rgba(255,255,255,0.25); color: #333;
     }
     button {
-      background: rgba(0, 123, 255, 0.6); color: white;
-      font-weight: bold; cursor: pointer;
-      transition: background 0.3s ease;
+      background: rgba(0,123,255,0.6); color: white; font-weight: bold;
+      cursor: pointer; transition: background 0.3s ease;
     }
-    button:hover { background: rgba(0, 123, 255, 0.8); }
+    button:hover { background: rgba(0,123,255,0.8); }
     .link { display: block; margin-top: 20px; color: #007bff; text-decoration: none; font-size: 14px; }
   </style>
 </head>
