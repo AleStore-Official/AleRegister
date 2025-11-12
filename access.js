@@ -2,20 +2,25 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
 const supabase = createClient(
   'https://hsyyrcbibohwvbuwxwok.supabase.co',
-  'PUBLIC_ANON_KEY' // usa la chiave anon pubblica, non quella segreta
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzeXlyY2JpYm9od3ZidXd4d29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE0MDcsImV4cCI6MjA3NjYzNzQwN30.2KsFsGYjwf_cA7Z9oglVthiaE1_jWYuQ6HMMm5UXsyo'
 );
 
 export async function blockIfUnauthorized() {
+  const accessVerified = localStorage.getItem("access_verified") === "true";
+  const userVerified = localStorage.getItem("user_verified") === "true";
+
+  if (accessVerified && userVerified) {
+    return;
+  }
+
   const email = localStorage.getItem("user_email");
   const password = sessionStorage.getItem("user_password");
 
-  // Se non ci sono credenziali → vai al CAPTCHA
   if (!email || !password) {
     window.location.href = "https://alestore-official.github.io/AleCAPTCHA";
     return;
   }
 
-  // Prova login con Supabase
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error || !data?.user?.email_confirmed_at) {
@@ -23,7 +28,6 @@ export async function blockIfUnauthorized() {
     return;
   }
 
-  // Controlla se l’utente esiste nella tabella
   const { data: profile, error: profileError } = await supabase
     .from("utenti")
     .select("email")
@@ -35,7 +39,6 @@ export async function blockIfUnauthorized() {
     return;
   }
 
-  // Se tutto ok → segna come verificato
   localStorage.setItem("access_verified", "true");
   localStorage.setItem("user_verified", "true");
 }
