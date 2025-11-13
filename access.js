@@ -9,22 +9,20 @@ export async function blockIfUnauthorized() {
   const accessVerified = localStorage.getItem("access_verified") === "true";
   const userVerified = localStorage.getItem("user_verified") === "true";
 
-  if (accessVerified && userVerified) {
-    return;
-  }
+  if (accessVerified && userVerified) return;
 
   const email = localStorage.getItem("user_email");
   const password = sessionStorage.getItem("user_password");
 
   if (!email || !password) {
-    window.location.href = "https://alestore-official.github.io/AleCAPTCHA";
+    window.location.href = "https://alestore-official.github.io/AleLogin";
     return;
   }
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error || !data?.user?.email_confirmed_at) {
-    window.location.href = "https://alestore-official.github.io/AleCAPTCHA";
+    window.location.href = "https://alestore-official.github.io/AleLogin";
     return;
   }
 
@@ -35,7 +33,7 @@ export async function blockIfUnauthorized() {
     .single();
 
   if (profileError || !profile) {
-    window.location.href = "https://alestore-official.github.io/AleCAPTCHA";
+    window.location.href = "https://alestore-official.github.io/AleLogin";
     return;
   }
 
