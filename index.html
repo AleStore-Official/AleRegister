@@ -74,10 +74,18 @@
       color: #0056b3;
     }
     .privacy-box {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
       font-size: 14px;
-      text-align: left;
       margin-top: 10px;
       color: #333;
+    }
+    .privacy-consent {
+      width: auto;
+      margin-right: 8px;
+      accent-color: #007bff;
+      cursor: pointer;
     }
     @keyframes fadeInUp {
       from {
@@ -99,14 +107,12 @@
       <input type="text" name="lastName" placeholder="Last Name" required />
       <input type="email" name="email" placeholder="Email" required />
       <input type="password" name="password" placeholder="Password (min 8 characters)" required />
-      
+
       <div class="privacy-box">
-        <label>
-          <input type="checkbox" id="privacyConsent" required />
-          I consent to the processing of my personal data in accordance with the GDPR and the AleStore Privacy Policy.
-        </label>
+        <input type="checkbox" id="privacyConsent" class="privacy-consent" required />
+        <label for="privacyConsent">Acconsento al trattamento dei miei dati da parte di AleStore</label>
       </div>
-      
+
       <button type="submit">Register</button>
     </form>
     <a class="link" href="https://alestore-official.github.io/AleLogin" target="_blank">Already have an account?</a>
@@ -130,7 +136,7 @@
       const password = form.password.value;
 
       if (!document.getElementById("privacyConsent").checked) {
-        alert("❌ You must consent to the privacy policy to register.");
+        alert("❌ Devi acconsentire al trattamento dei dati per registrarti.");
         return;
       }
 
