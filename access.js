@@ -14,13 +14,14 @@ export async function blockIfUnauthorized() {
     return;
   }
 
+  // Step 1: check with Supabase Auth
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
   if (error || !data?.user?.email_confirmed_at) {
     window.location.href = "https://alestore-official.github.io/AleLogin";
     return;
   }
 
+  // Step 2: check in custom table
   const { data: profile, error: profileError } = await supabase
     .from("utenti")
     .select("email")
@@ -29,6 +30,7 @@ export async function blockIfUnauthorized() {
 
   if (profileError || !profile) {
     window.location.href = "https://alestore-official.github.io/AleLogin";
+    return;
   }
 }
 
