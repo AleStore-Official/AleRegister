@@ -88,14 +88,8 @@
       cursor: pointer;
     }
     @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -142,20 +136,6 @@
 
       if (password.length < 8) {
         alert("❌ Password must be at least 8 characters.");
-        trackTime('registration_failed_short_password');
-        return;
-      }
-
-      const { data: existing } = await supabase
-        .from("utenti")
-        .select("email")
-        .eq("email", email)
-        .single();
-
-      if (existing) {
-        alert("⚠️ This email is already registered. Please log in instead.");
-        trackTime('registration_failed_email_exists');
-        window.location.href = "https://alestore-official.github.io/AleLogin";
         return;
       }
 
@@ -171,10 +151,8 @@
 
       if (error) {
         alert("❌ " + error.message);
-        trackTime('registration_failed_supabase_error');
       } else {
         alert("📧 Confirmation email sent. Please check your inbox.");
-        trackTime('registration_success');
       }
     });
   </script>
