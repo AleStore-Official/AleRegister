@@ -15,7 +15,13 @@ export async function blockIfUnauthorized() {
   }
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error || !data?.user?.email_confirmed_at) {
+
+  if (error || !data?.user) {
+    window.location.href = "https://alestore-official.github.io/AleLogin";
+    return;
+  }
+
+  if (!data.user.email_confirmed_at) {
     window.location.href = "https://alestore-official.github.io/AleLogin";
     return;
   }
