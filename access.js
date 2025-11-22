@@ -10,28 +10,14 @@ export async function blockIfUnauthorized() {
   const password = localStorage.getItem("user_password");
 
   if (!email || !password) {
-    window.location.href = "https://alestore-official.github.io/AleLogin";
+    window.location.href = "https://alestore-official.github.io/AleRegister";
     return;
   }
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-  if (error || !data?.user) {
-    window.location.href = "https://alestore-official.github.io/AleLogin";
+  if (error || !data?.user || !data.user.email_confirmed_at) {
+    window.location.href = "https://alestore-official.github.AleRegister";
     return;
-  }
-
-  if (!data.user.email_confirmed_at) {
-    window.location.href = "https://alestore-official.github.io/AleLogin";
-    return;
-  }
-}
-
-export function blockIfAuthenticated() {
-  const email = localStorage.getItem("user_email");
-  const password = localStorage.getItem("user_password");
-
-  if (email && password) {
-    window.location.href = "https://alestore-official.github.io/AleInfo";
   }
 }
