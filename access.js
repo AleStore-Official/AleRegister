@@ -19,17 +19,6 @@ export async function blockIfUnauthorized() {
     window.location.href = "https://alestore-official.github.io/AleLogin";
     return;
   }
-
-  const { data: profile, error: profileError } = await supabase
-    .from("utenti")
-    .select("email")
-    .eq("email", email)
-    .single();
-
-  if (profileError || !profile) {
-    window.location.href = "https://alestore-official.github.io/AleLogin";
-    return;
-  }
 }
 
 export function blockIfAuthenticated() {
