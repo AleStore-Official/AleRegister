@@ -108,12 +108,10 @@
       <input type="text" name="lastName" placeholder="Last Name" required />
       <input type="email" name="email" placeholder="Email" required />
       <input type="password" name="password" placeholder="Password (min 8 characters)" required />
-
       <div class="privacy-box">
         <input type="checkbox" id="privacyConsent" class="privacy-consent" required />
         <label for="privacyConsent">I consent to the processing of my data by AleStore-Official</label>
       </div>
-
       <button type="submit">Register</button>
     </form>
     <a class="link" href="https://alestore-official.github.io/AleLogin" target="_blank">Already have an account?</a>
@@ -130,7 +128,6 @@
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       const firstName = form.firstName.value.trim();
       const lastName = form.lastName.value.trim();
       const email = form.email.value.trim().toLowerCase();
