@@ -8,10 +8,7 @@ const supabase = createClient(
 const REDIRECT_URL = "https://alestore-official.github.io/AleLogin";
 
 function clearAuthData() {
-  localStorage.removeItem("user_email");
-  localStorage.removeItem("user_password");
-  localStorage.removeItem("access_verified");
-  localStorage.removeItem("user_verified");
+  localStorage.clear();
 }
 
 export async function blockIfUnauthorized() {
@@ -21,7 +18,7 @@ export async function blockIfUnauthorized() {
 
     if (!email || !password) {
       clearAuthData();
-      window.location.href = REDIRECT_URL;
+      window.location.replace(REDIRECT_URL);
       return;
     }
 
@@ -29,18 +26,27 @@ export async function blockIfUnauthorized() {
 
     if (error || !data?.user || !data.user.email_confirmed_at) {
       clearAuthData();
-      window.location.href = REDIRECT_URL;
+      window.location.replace(REDIRECT_URL);
       return;
     }
 
-    const { data: sessionData } = await supabase.auth.getSession();
-    if (!sessionData?.session?.user?.id) {
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !sessionData?.session?.user?.id) {
       clearAuthData();
-      window.location.href = REDIRECT_URL;
+      window.location.replace(REDIRECT_URL);
       return;
     }
   } catch {
     clearAuthData();
-    window.location.href = REDIRECT_URL;
+    window.location.replace(REDIRECT_URL);
+  }
+}
+
+export function blockIfAuthenticated() {
+  const email = localStorage.getItem("user_email");
+  const password = localStorage.getItem("user_password");
+
+  if (email && password) {
+    window.location.replace("https://alestore-official.github.io/AleInfo");
   }
 }
