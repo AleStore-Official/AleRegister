@@ -224,6 +224,23 @@
         return;
       }
 
+      const { data: existingUser, error: lookupError } = await supabase
+        .from("auth.users")
+        .select("email")
+        .eq("email", email)
+        .maybeSingle();
+
+      if (lookupError) {
+        alert("❌ Error checking existing users.");
+        return;
+      }
+
+      if (existingUser) {
+        alert("ℹ️ This email is already registered. Please go to login.");
+        window.location.href = "https://alestore-official.github.io/AleLogin";
+        return;
+      }
+
       localStorage.setItem("pending_user", JSON.stringify({ firstName, lastName, email, password }));
 
       const { error } = await supabase.auth.signUp({
