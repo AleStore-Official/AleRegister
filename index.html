@@ -149,7 +149,7 @@
     import { createClient } from 'https://esm.sh/@supabase/supabase-js';
     const supabase = createClient(
       'https://hsyyrcbibohwvbuwxwok.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzeXlyY2JpYm9od3ZidXd4d29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE0MDcsImV4cCI6MjA3NjYzNzQwN30.2KsFsGYjwfcA7Z9oglVthiaE1jWYuQ6HMMm5UXsyo' 
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzeXlyY2JpYm9od3ZidXd4d29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE0MDcsImV4cCI6MjA3NjYzNzQwN30.2KsFsGYjwf_cA7Z9oglVthiaE1_jWYuQ6HMMm5UXsyo'
     );
 
     const form = document.getElementById("form");
@@ -160,12 +160,7 @@
     const allowedDomains = ["gmail.com","yahoo.com","outlook.com","hotmail.com","icloud.com","protonmail.com"];
 
     function checkPasswordStrength(password) {
-      const regex = {
-        upper: /[A-Z]/,
-        lower: /[a-z]/,
-        number: /[0-9]/,
-        symbol: /[^A-Za-z0-9]/
-      };
+      const regex = { upper:/[A-Z]/, lower:/[a-z]/, number:/[0-9]/, symbol:/[^A-Za-z0-9]/ };
       let score = 0;
       if (password.length >= 8) score++;
       if (regex.upper.test(password)) score++;
@@ -178,27 +173,15 @@
 
     function updateStrength(password) {
       const score = checkPasswordStrength(password);
-      let strength = "Weak";
-      let color = "red";
-      let width = "20%";
-      if (score >= 3) {
-        strength = "Medium";
-        color = "orange";
-        width = "60%";
-      }
-      if (score >= 5) {
-        strength = "Strong";
-        color = "green";
-        width = "100%";
-      }
+      let strength = "Very Weak", color = "red", width = "20%";
+      if (score >= 3) { strength = "Medium"; color = "orange"; width = "60%"; }
+      if (score >= 5) { strength = "Strong"; color = "green"; width = "100%"; }
       strengthFill.style.width = width;
       strengthFill.style.background = color;
       strengthText.textContent = "Password strength: " + strength;
     }
 
-    passwordInput.addEventListener("input", () => {
-      updateStrength(passwordInput.value);
-    });
+    passwordInput.addEventListener("input", () => updateStrength(passwordInput.value));
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -229,13 +212,16 @@
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          emailRedirectTo: "https://alestore-official.github.io/AleConfirm"
-        }
+        options: { emailRedirectTo: "https://alestore-official.github.io/AleConfirm" }
       });
 
       if (error) {
-        alert("❌ " + error.message);
+        if (error.message.toLowerCase().includes("already registered")) {
+          alert("ℹ️ This email is already registered. Please go to login.");
+          window.location.href = "https://alestore-official.github.io/AleLogin";
+        } else {
+          alert("❌ " + error.message);
+        }
       } else {
         alert("📧 Confirmation email sent. Please check your inbox.");
       }
