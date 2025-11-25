@@ -23,10 +23,12 @@
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1),
                   inset 0 0 0.5px rgba(255, 255, 255, 0.4);
       backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       max-width: 400px;
       width: 90%;
       text-align: center;
-      animation: fadeInUp 0.8s ease-out;
+      animation: fadeInUp 1.2s ease-in-out;
+      transition: transform 0.3s ease;
     }
     .glass-box:hover {
       transform: scale(1.02);
@@ -48,6 +50,7 @@
       color: #333;
       box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
       backdrop-filter: blur(6px);
+      transition: all 0.4s ease;
     }
     input::placeholder {
       color: #666;
@@ -172,7 +175,6 @@
       if (regex.lower.test(password)) score++;
       if (regex.number.test(password)) score++;
       if (regex.symbol.test(password)) score++;
-      if (password.length >= 12) score++;
       return score;
     }
 
@@ -220,7 +222,7 @@
 
       const score = checkPasswordStrength(password);
       if (score < 5) {
-        alert("❌ Password must be at least 8 characters and include uppercase, lowercase, number, and symbol.");
+        alert("❌ Registration blocked. Password must be strong: at least 8 characters, uppercase, lowercase, number, and symbol.");
         return;
       }
 
