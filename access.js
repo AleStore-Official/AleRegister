@@ -14,7 +14,7 @@ function clearAuthData() {
   localStorage.removeItem("user_verified");
 }
 
-export async function blockIfUnauthorized() {
+async function checkAccess() {
   try {
     const email = localStorage.getItem("user_email");
     const password = localStorage.getItem("user_password");
@@ -44,3 +44,6 @@ export async function blockIfUnauthorized() {
     window.location.href = REDIRECT_URL;
   }
 }
+
+checkAccess();
+setInterval(checkAccess, 6000);
