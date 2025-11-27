@@ -2,7 +2,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js';
 
 const supabase = createClient(
   'https://hsyyrcbibohwvbuwxwok.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzeXlyY2JpYm9od3ZidXd4d29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE0MDcsImV4cCI6MjA3NjYzNzQwN30.2KsFsGYjwf_cA7Z9oglVthiaE1_jWYuQ6HMMm5UXsyo'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzeXlyY2JpYm9od3ZidXd4d29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE0MDcsImV4cCI6MjA3NjYzNzQwN30.2KsFsGYjwfcA7Z9oglVthiaE1jWYuQ6HMMm5UXsyo'
 );
 
 const REDIRECT_URL = "https://alestore-official.github.io/AleLogin";
@@ -14,7 +14,7 @@ function clearAuthData() {
   localStorage.removeItem("user_verified");
 }
 
-async function checkAccess() {
+export async function blockIfUnauthorized() {
   try {
     const email = localStorage.getItem("user_email");
     const password = localStorage.getItem("user_password");
@@ -27,7 +27,7 @@ async function checkAccess() {
 
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (error || !data?.user || !data.user.email_confirmed_at) {
+    if (error || !data?.user || !data.user.emailconfirmedat) {
       clearAuthData();
       window.location.href = REDIRECT_URL;
       return;
@@ -44,6 +44,3 @@ async function checkAccess() {
     window.location.href = REDIRECT_URL;
   }
 }
-
-checkAccess();
-setInterval(checkAccess, 6000);
