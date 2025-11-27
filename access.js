@@ -27,7 +27,7 @@ export async function blockIfUnauthorized() {
 
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (error || !data?.user || !data.user.emailconfirmedat) {
+    if (error || !data?.user || !data.user.email_confirmed_at) {
       clearAuthData();
       window.location.href = REDIRECT_URL;
       return;
