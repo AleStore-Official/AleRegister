@@ -148,6 +148,12 @@
     <a class="link" href="https://alestore-official.github.io/AleLogin" target="_blank">Already have an account?</a>
   </div>
 
+<script>
+    if (localStorage.getItem("register_completed") === "true") {
+      window.location.href = "https://alestore-official.github.io/AleLogin"
+    }
+  </script>
+
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js';
     const supabase = createClient(
@@ -226,6 +232,7 @@
         return;
       }
 
+      localStorage.setItem("register_completed", "true");
       localStorage.setItem("pending_user", JSON.stringify({ firstName, lastName, email, password }));
 
       const { error } = await supabase.auth.signUp({
