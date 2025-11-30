@@ -12,6 +12,7 @@ function clearAuthData() {
   localStorage.removeItem("user_password");
   localStorage.removeItem("access_verified");
   localStorage.removeItem("user_verified");
+  localStorage.removeItem("register_completed");
 }
 
 export async function blockIfUnauthorized() {
