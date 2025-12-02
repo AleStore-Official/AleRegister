@@ -226,7 +226,7 @@
       return;
     }
 
-    const domain = email.split("@")[1];
+   const domain = email.split("@")[1];
     if (!allowedDomains.includes(domain)) {
       alert("❌ Only popular email providers are allowed.");
       return;
@@ -237,9 +237,6 @@
       alert("❌ Registration blocked. Password must be strong: at least 8 characters, uppercase, lowercase, number, and symbol.");
       return;
     }
-
-    localStorage.setItem("register_completed", "true");
-    localStorage.setItem("pending_user", JSON.stringify({ firstName, lastName, email, password }));
 
     const { error } = await supabase.auth.signUp({
       email,
