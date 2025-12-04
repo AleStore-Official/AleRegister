@@ -27,7 +27,7 @@
       max-width: 400px;
       width: 90%;
       text-align: center;
-      animation: fadeInUp 0.8s ease-out;
+      animation: fadeInUp 1.2s ease-in-out;
       transition: transform 0.3s ease;
     }
     .glass-box:hover {
@@ -50,6 +50,7 @@
       color: #333;
       box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
       backdrop-filter: blur(6px);
+      transition: all 0.4s ease;
     }
     input::placeholder {
       color: #666;
@@ -75,15 +76,54 @@
     .link:hover {
       color: #0056b3;
     }
+    .privacy-box {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin: 12px 0;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+      backdrop-filter: blur(6px);
+      color: #333;
+      font-size: 14px;
+    }
+    .privacy-consent {
+      width: 18px;
+      height: 18px;
+      margin-right: 10px;
+      cursor: pointer;
+      accent-color: #007bff;
+      flex-shrink: 0;
+    }
+    .strength-box {
+      margin: 12px 0;
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+      backdrop-filter: blur(6px);
+      color: #333;
+      font-size: 14px;
+      text-align: left;
+    }
+    .strength-bar {
+      width: 100%;
+      height: 10px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.25);
+      overflow: hidden;
+      margin-top: 5px;
+    }
+    .strength-fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
     @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -91,49 +131,128 @@
   <div class="glass-box">
     <h2>Create your account</h2>
     <form id="form">
+      <input type="text" name="firstName" placeholder="First Name" required />
+      <input type="text" name="lastName" placeholder="Last Name" required />
       <input type="email" name="email" placeholder="Email" required />
-      <input type="password" name="password" placeholder="Password" required />
+      <input type="password" name="password" placeholder="Password (min 8 characters)" required />
+      <div class="strength-box">
+        <div id="strengthText">Password strength: </div>
+        <div class="strength-bar"><div id="strengthFill" class="strength-fill"></div></div>
+      </div>
+      <div class="privacy-box">
+        <input type="checkbox" id="privacyConsent" class="privacy-consent" required />
+        <label for="privacyConsent">I consent to the processing of my data by AleStore-Official</label>
+      </div>
       <button type="submit">Register</button>
     </form>
-    <a class="link" href="https://alestore-official.github.io/AleLogin">Already have an account? Login</a>
+    <a class="link" href="https://alestore-official.github.io/AleLogin" target="_blank">Already have an account?</a>
   </div>
 
-  <script>
-    if (localStorage.getItem("jwt_register")) {
-      window.location.href = "https://alestore-official.github.io/AleInfo";
+<script>
+  if (
+    localStorage.getItem("register_completed") === "true" ||
+    (
+      localStorage.getItem("user_verified") === "true" &&
+      localStorage.getItem("access_verified") === "true"
+    )
+  ) {
+    window.location.href = "https://alestore-official.github.io/AleLogin"
+  }
+</script>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js';
+  const supabase = createClient(
+    'https://hsyyrcbibohwvbuwxwok.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhzeXlyY2JpYm9od3ZidXd4d29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEwNjE0MDcsImV4cCI6MjA3NjYzNzQwN30.2KsFsGYjwf_cA7Z9oglVthiaE1_jWYuQ6HMMm5UXsyo' 
+  );
+
+  const form = document.getElementById("form");
+  const passwordInput = form.password;
+  const strengthFill = document.getElementById("strengthFill");
+  const strengthText = document.getElementById("strengthText");
+
+  const allowedDomains = ["gmail.com","yahoo.com","outlook.com","hotmail.com","icloud.com","protonmail.com"];
+
+  function checkPasswordStrength(password) {
+    const regex = {
+      upper: /[A-Z]/,
+      lower: /[a-z]/,
+      number: /[0-9]/,
+      symbol: /[^A-Za-z0-9]/
+    };
+    let score = 0;
+    if (password.length >= 8) score++;
+    if (regex.upper.test(password)) score++;
+    if (regex.lower.test(password)) score++;
+    if (regex.number.test(password)) score++;
+    if (regex.symbol.test(password)) score++;
+    return score;
+  }
+
+  function updateStrength(password) {
+    const score = checkPasswordStrength(password);
+    let strength = "Weak";
+    let color = "red";
+    let width = "20%";
+    if (score >= 3) {
+      strength = "Medium";
+      color = "orange";
+      width = "60%";
     }
-  </script>
+    if (score >= 5) {
+      strength = "Strong";
+      color = "green";
+      width = "100%";
+    }
+    strengthFill.style.width = width;
+    strengthFill.style.background = color;
+    strengthText.textContent = "Password strength: " + strength;
+  }
 
-  <script>
-    const form = document.getElementById("form");
+  passwordInput.addEventListener("input", () => {
+    updateStrength(passwordInput.value);
+  });
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = form.email.value.trim().toLowerCase();
-      const password = form.password.value;
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const firstName = form.firstName.value.trim();
+    const lastName = form.lastName.value.trim();
+    const email = form.email.value.trim().toLowerCase();
+    const password = form.password.value;
 
-      const res = await fetch("https://hsyyrcbibohwvbuwxwok.supabase.co/functions/v1/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      });
+    if (!document.getElementById("privacyConsent").checked) {
+      alert("❌ You must consent to data processing to register.");
+      return;
+    }
 
-      const result = await res.json();
+   const domain = email.split("@")[1];
+    if (!allowedDomains.includes(domain)) {
+      alert("❌ Only popular email providers are allowed.");
+      return;
+    }
 
-      if (!res.ok || !result.success) {
-        alert("❌ " + (result.message || "Registration failed"));
-        return;
+    const score = checkPasswordStrength(password);
+    if (score < 5) {
+      alert("❌ Registration blocked. Password must be strong: at least 8 characters, uppercase, lowercase, number, and symbol.");
+      return;
+    }
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: "https://alestore-official.github.io/AleConfirm"
       }
-
-      localStorage.setItem("jwt_register", result.jwt);
-      window.location.href = "https://alestore-official.github.io/AleInfo";
     });
-  </script>
 
-  <script type="module">
-    import { blockIfAuthenticated } from 'https://alestore-official.github.io/AleRegister/access.js';
-    blockIfAuthenticated();
-  </script>
-  <script src="https://alestore-official.github.io/AleCAPTCHA/control.js"></script>
+    if (error) {
+      alert("❌ " + error.message);
+    } else {
+      alert("📧 Confirmation email sent. Please check your inbox.");
+    }
+  });
+</script>
+<script src="https://alestore-official.github.io/AleCAPTCHA/control.js"></script>
 </body>
 </html>
